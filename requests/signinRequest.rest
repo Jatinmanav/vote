@@ -1,0 +1,7 @@
+post http://localhost:3001/api/signin
+Content-Type: application/json
+
+{
+    "email": "test1248@test.com",
+    "password": "testPassword"
+}

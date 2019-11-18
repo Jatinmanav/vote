@@ -1,0 +1,10 @@
+post http://localhost:3001/api/signup
+Content-Type: application/json
+
+{
+  "firstName": "First",
+  "lastName": "Last",
+  "rollNum": "1234567",
+  "email": "test1248@test.com",
+  "password": "testPassword"
+}

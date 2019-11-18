@@ -1,0 +1,33 @@
+.Homepage {
+    height: 100vh;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: top center;
+}
+
+.Homepage-Content {
+    /*height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-end;
+    padding: 40px;*/
+    position: absolute;
+    width: 1000px;
+    height: 50px;
+    top: 50%;
+    left: 50%;
+    margin-left: -50px; /* margin is -0.5 * dimension */
+    margin-top: -25px;
+}
+
+@media (min-width: 650px ) {
+    .Homepage {
+        background-position: center center;
+    }
+
+    .Homepage-Content {
+        align-items: flex-end;
+        justify-content: center;
+    }
+}
