@@ -1,12 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import axios from 'axios'
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
-import TextField from '@material-ui/core/TextField';
-import Link from '@material-ui/core/Link';
 import Grid from '@material-ui/core/Grid';
-import Box from '@material-ui/core/Box';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
 import Card from '@material-ui/core/Card';
@@ -19,6 +16,11 @@ import Colors from '../ColorVariables';
 import Select from '@material-ui/core/Select';
 import InputLabel from '@material-ui/core/InputLabel';
 import FormControl from '@material-ui/core/FormControl';
+import castVoteComponent from '../services/castVoteComponent';
+import Snackbar from '@material-ui/core/Snackbar';
+import IconButton from '@material-ui/core/IconButton';
+import CloseIcon from '@material-ui/icons/Close';
+import { AuthContext } from '../contexts/AuthContext';
 
 const theme = createMuiTheme({
   palette: {
@@ -95,41 +97,6 @@ const Constituency =({ constituency, handleConstituencyChange, constituencyRows,
   )
 }
 
-const Candidate =({ candidate, handleCandidateChange, candidateRows, handleCandidateSubmit })=> {
-	const classes = useStyles();
-	return(
-    <form onSubmit={handleCandidateSubmit} className={classes.form} method="post">
-    <Grid container spacing={2}>
-        <Grid item xs={12}>
-        <FormControl variant="filled" className={classes.formControl}>
-        <InputLabel>Candidate</InputLabel>
-        <Select
-            native
-            value={candidate}
-            onChange={handleCandidateChange}
-            fullWidth
-            required
-            >
-            <option value="" />
-            {candidateRows()}
-        </Select>
-        </FormControl>
-        </Grid>
-    </Grid>
-    <Button
-        type="submit"
-        fullWidth
-        variant="contained"
-        color="primary"
-        className={classes.submit}
-    >
-        Submit
-    </Button>
-    </form>
-	)
-}
-
-
 const Constituencies =({elem})=> {
     if(elem===undefined){
       return (
@@ -141,24 +108,14 @@ const Constituencies =({elem})=> {
     )
 }
 
-const Candidates =({elem})=> {
-    if(elem===undefined){
-      return (
-        <option value=" " />
-      )
-    }
-
-    return (
-        <option value={elem.name}> {elem.name} </option>
-    )
-}
-
 
 const Castvote =()=> {
+    const [errorMessage, setErrorMessage] = useState('');
+    const [open, setOpen] = useState(false);
+    const {userData} = useContext(AuthContext);
     const [ constituency, setConstituency ] = useState();
-    const [ candidate, setCandidate ] = useState();
     const [ constituencies, setConstituencies ] = useState([]);
-    const [ isConstituency, setIsConstitutency ] = useState(true)
+    console.log(userData);
 
     useEffect(() => {
       axios
@@ -168,6 +125,14 @@ const Castvote =()=> {
       })
     }, [])
 
+
+    const handleClose = (event, reason) => {
+      if (reason === 'clickaway') {
+        return;
+      }
+      setErrorMessage('');
+      setOpen(false);
+    };
 
     const animationStyle = useSpring({
         opacity: 1,
@@ -188,20 +153,6 @@ const Castvote =()=> {
 	    )
 	}
 
-    const candidateRows =()=> {
-      let filteredConstituencies = constituencies.filter((elem)=>elem.name === constituency);
-      const candidateList = filteredConstituencies[0].candidates;
-      console.log(candidateList)
-      return candidateList.map(elem => {
-          return(
-              <Candidates
-                  key={elem.candidateID}
-                  elem={elem}
-              />
-          )
-      })
-    }
-
     const classes = useStyles();
 
     const handleConstituencyChange =(e)=> {
@@ -209,23 +160,23 @@ const Castvote =()=> {
         setConstituency(e.target.value);
     }
 
-    const handleCandidateChange =(e)=> {
-        console.log(e.target.value);
-        setCandidate(e.target.value);
-    }
-
-    const handleConstituencySubmit =(e)=> {
-		e.preventDefault();
-		console.log(constituency);
-		setIsConstitutency(false);
-		console.log(isConstituency)
-	}
+    const handleConstituencySubmit =async(e)=> {
+		  e.preventDefault();
+      console.log(constituency);
+      const newObject = {email: userData.email, candidate: constituency};
+      const result = await castVoteComponent(newObject);
+      console.log(result);
+      if(result === true){
+        console.log("success");
+        setErrorMessage("You have successfully Cast your Vote! Please Visit the Results Page!")
+        setOpen(true);
+      } else {
+        console.log("Already Voted")
+        setErrorMessage("You have already Cast your Vote!  Please Visit the Results Page!")
+        setOpen(true);
+      }
+	  }
 	
-	const handleCandidateSubmit =(e)=> {
-		e.preventDefault();
-		console.log('Voted for ', candidate);
-	}
-
     return (
         <animated.div style={animationStyle}>
             <ThemeProvider theme={theme}>
@@ -240,14 +191,34 @@ const Castvote =()=> {
                         <Typography component="h1" variant="h5">
                         Cast Vote
                         </Typography>
-						{isConstituency ? 
-							<Constituency constituency={constituency} handleConstituencyChange={handleConstituencyChange} constituencyRows={constituencyRows} handleConstituencySubmit={handleConstituencySubmit} />:
-							<Candidate candidate={candidate} handleCandidateChange={handleCandidateChange} candidateRows={candidateRows} handleCandidateSubmit={handleCandidateSubmit} />
-						}
+						         	<Constituency constituency={constituency} handleConstituencyChange={handleConstituencyChange} constituencyRows={constituencyRows} handleConstituencySubmit={handleConstituencySubmit} />
                     </div>
                     </Card>
                     </Container>
                     <Constituencies />
+                    <Snackbar
+                      anchorOrigin={{
+                        vertical: 'bottom',
+                        horizontal: 'left',
+                      }}
+                      open={open}
+                      autoHideDuration={3000}
+                      onClose={handleClose}
+                      message={errorMessage}
+                      variant="success"
+                      action={[
+
+                      <IconButton
+                        key="close"
+                        aria-label="close"
+                        color="inherit"
+                        className={classes.close}
+                        onClick={handleClose}
+                      >
+                        <CloseIcon />
+                      </IconButton>
+                      ]}
+                    />
             </ThemeProvider>
         </animated.div>
     )

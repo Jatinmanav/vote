@@ -1,6 +1,7 @@
 import React from 'react';
 import colors from '../ColorVariables'
 import { useSpring, animated } from 'react-spring';
+import imageUrl from '../background.png';
 //import '../styles/homepage.css';
 
 
@@ -16,6 +17,7 @@ const Homepage =()=>{
 
     const backgroundImage = {
        //backgroundImage: 'url('+ imgUrl +')',
+       backgroundImage: 'url('+ imageUrl +')',
        backgroundColor: colors.backgroundColor1,
        //backgroundSize: 'cover',
        //backgroundPosition: 'top center',
@@ -32,6 +34,7 @@ const Homepage =()=>{
         fontSize: '6vh',
     }
 
+    //Make Your<br /> Vote Count
     return(
         <animated.div style={animationStyle}>
             <div style={backgroundImage}>

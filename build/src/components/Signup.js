@@ -1,4 +1,5 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
+import axios from 'axios';
 import Colors from '../ColorVariables'
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
@@ -19,7 +20,7 @@ import Snackbar from '@material-ui/core/Snackbar';
 import IconButton from '@material-ui/core/IconButton';
 import CloseIcon from '@material-ui/icons/Close';
 import { AuthContext, AuthContextProvider } from '../contexts/AuthContext';
-import signupService from '../services/signupComponent'
+import signupService from '../services/signupComponent';
 
 const Copyright =()=> {
   return (
@@ -58,6 +59,8 @@ const useStyles = makeStyles(theme => ({
   },
   submit: {
     margin: theme.spacing(3, 0, 3),
+  },formControl: {
+    minWidth: 335,
   },
 }));
 
@@ -71,7 +74,6 @@ const theme = createMuiTheme({
   },
 });
 
-
 const SignUp =()=> {
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
@@ -80,7 +82,7 @@ const SignUp =()=> {
   const [password, setPassword] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
   const [open, setOpen] = useState(false);
-  const { auth, setAuthenticated } = useContext(AuthContext);
+  const { setJwt, setAuthenticated, setUserData } = useContext(AuthContext);
   
 
   const classes = useStyles();
@@ -93,7 +95,7 @@ const SignUp =()=> {
   })
 
   const patterns = {
-    email: /^[a-z\d]{2,}\@\w{2,}\.([a-z]{2,4})$/,
+    email: /^[a-zA-Z\d]{2,}\@\w{2,}\.([a-z]{2,4})$/,
     password: /^\w{8,20}$/,
     rollnum: /^[0-9]{7}$/,
   };
@@ -126,13 +128,29 @@ const SignUp =()=> {
     setOpen(false);
   };
 
+  const verifyUser = async (signupObject)=> {
+    const [result, jwt, userData] = await signupService(signupObject);
+    console.log(result);
+    console.log(jwt);
+    console.log(userData);
+    if(result===true){
+      setJwt(jwt);
+      setUserData(userData);
+      setAuthenticated('test');
+    } else {
+      setErrorMessage('Email is already registered');
+      setOpen(true);
+    }
+  }
+
+
   const handleSubmit =(e)=> {
     e.preventDefault();
     const signupObject = {
       firstName: firstName,
       lastName: lastName,
-      email: email,
       rollNum: rollNum,
+      email: email,
       password: password
     }
 
@@ -146,9 +164,7 @@ const SignUp =()=> {
       setOpen(true);
     }
     else {
-      signupService(signupObject);
-      console.log('success')
-      setAuthenticated('test');
+      verifyUser(signupObject);
     }
   }
 
@@ -199,11 +215,11 @@ const SignUp =()=> {
                           variant="outlined"
                           required
                           fullWidth
-                          id="email"
-                          label="Email Address"
-                          name="email"
-                          autoComplete="email"
-                          onChange={handleEmailChange}
+                          id="rollNum"
+                          label="Roll Number"
+                          name="rollNum"
+                          autoComplete="rollnum"
+                          onChange={handleRollNumChange}
                         />
                       </Grid>
                       <Grid item xs={12}>
@@ -211,11 +227,11 @@ const SignUp =()=> {
                           variant="outlined"
                           required
                           fullWidth
-                          id="rollNum"
-                          label="Roll Number"
-                          name="rollNum"
-                          autoComplete="rollnum"
-                          onChange={handleRollNumChange}
+                          id="email"
+                          label="Email Address"
+                          name="email"
+                          autoComplete="email"
+                          onChange={handleEmailChange}
                         />
                       </Grid>
                       <Grid item xs={12}>

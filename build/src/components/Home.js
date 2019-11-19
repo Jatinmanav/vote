@@ -21,19 +21,22 @@ const Home =()=>{
        height: '100vh',
     }
     const { auth, setAuthenticated } = useContext(AuthContext);
+    const { jwt, userData } = useContext(AuthContext);
+    console.log(jwt);
+    console.log(userData);
 
     return (
         <div>
             <Router>
                 <div style={backgroundImage}>
                 <div className='Header'>
-                    {auth.isAuthenticated?<HeaderLoggedIn />:<Header />}
+                    {jwt?<HeaderLoggedIn />:<Header />}
                     <Route exact path="/" render={()=> <Homepage />} />
                     <Route path="/about" render={()=> <About />} />
-                    <Route path="/castvote" render={()=> auth.isAuthenticated?<Castvote />:<Redirect to="/signup" />} />
+                    <Route path="/castvote" render={()=> jwt?<Castvote />:<Redirect to="/signup" />} />
                     <Route path="/results" render={()=> <Result />} />
-                    <Route path="/signin" render={()=> auth.isAuthenticated?<Redirect to="/" />:<Signin />} />
-                    <Route path="/signup" render={()=> auth.isAuthenticated?<Redirect to="/" />:<Signup />} />
+                    <Route path="/signin" render={()=> jwt?<Redirect to="/" />:<Signin />} />
+                    <Route path="/signup" render={()=> jwt?<Redirect to="/" />:<Signup />} />
                 </div>
                 </div>
             </Router>

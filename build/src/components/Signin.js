@@ -84,7 +84,7 @@ const Signin=()=> {
   const [password, setPassword] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
   const [open, setOpen] = useState(false);
-  const { setAuthenticated } = useContext(AuthContext);
+  const { setAuthenticated, setJwt } = useContext(AuthContext);
   const classes = useStyles();
   const animatedStyle = useSpring({
     opacity: 1,
@@ -108,15 +108,17 @@ const Signin=()=> {
 
 
   const verifyUser = async (newObject)=> {
-    const isValidUser = await signinService(newObject);
+    const [isValidUser,jwt] = await signinService(newObject);
     console.log(isValidUser);
+    console.log(typeof(isValidUser));
     if(isValidUser==='name') {
       setErrorMessage('Invalid Email');
       setOpen(true);
     }
     else if(isValidUser) {
       console.log('success')
-      setAuthenticated('test');
+      setJwt(jwt);
+      //setAuthenticated('test');
     } else {
       console.log('fail');
       setErrorMessage('Invalid Password');
@@ -130,7 +132,7 @@ const Signin=()=> {
       email: email,
       password: password
     }
-    console.log(email, password);
+    //console.log(email, password);
     if(!patterns.email.test(email)){
       setErrorMessage('Enter a Valid Email ID');
       setOpen(true);
