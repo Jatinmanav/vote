@@ -1,0 +1,7 @@
+post http://localhost:3001/api/castvote
+Content-Type: application/json
+
+{
+    "candidate": "Candidate1",
+    "email": "test3538@test.com"
+}

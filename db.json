@@ -2,98 +2,23 @@
     "constituencies": [
       {
         "id": 1,
-        "name": "Constituency 1",
-        "candidates": [
-          {
-            "candidateID": 1,
-            "name": "Candidate 1"
-          },
-          {
-            "candidateID": 2,
-            "name": "Candidate 2"
-          },
-          {
-            "candidateID": 3,
-            "name": "Candidate 3"
-          },
-          {
-            "candidateID": 4,
-            "name": "Candidate 4"
-          }
-        ]
+        "name": "Candidate 1",
+        "color": "#ff6384"
       },
       {
         "id": 2,
-        "name": "Constituency 2",
-        "candidates": [
-          {
-            "candidateID": 5,
-            "name": "Candidate 5"
-          },
-          {
-            "candidateID": 6,
-            "name": "Candidate 6"
-          },
-          {
-            "candidateID": 7,
-            "name": "Candidate 7"
-          },
-          {
-            "candidateID": 8,
-            "name": "Candidate 8"
-          }
-        ]
-
+        "name": "Candidate 2",
+        "color": "#36a2eb"
       },
       {
         "id": 3,
-        "name": "Constituency 3",
-        "candidates": [
-          {
-            "candidateID": 9,
-            "name": "Candidate 9"
-          },
-          {
-            "candidateID": 10,
-            "name": "Candidate 10"
-          },
-          {
-            "candidateID": 11,
-            "name": "Candidate 11"
-          },
-          {
-            "candidateID": 12,
-            "name": "Candidate 12"
-          }
-        ]
-
+        "name": "Candidate 3",
+        "color": "#ffce56"
       },
       {
         "id": 4,
-        "name": "Constituency 4",
-        "candidates": [
-          {
-            "candidateID": 13,
-            "name": "Candidate 13"
-          },
-          {
-            "candidateID": 14,
-            "name": "Candidate 14"
-          },
-          {
-            "candidateID": 15,
-            "name": "Candidate 15"
-          },
-          {
-            "candidateID": 16,
-            "name": "Candidate 16"
-          },
-          {
-            "candidateID": 17,
-            "name": "Candidate 4"
-          }
-        ]
-
+        "name": "Candidate 4",
+        "color": "#23efgh"
       }
     ]
 }

@@ -25,18 +25,12 @@ const signupSchema = new mongoose.Schema({
     minlength: 3,
     required: true
   },
+  voteCount: {
+    type: Boolean,
+    required: true
+  },
   rollNum: {
     type: Number,
-    minlength: 3,
-    required: true
-  },
-  publicKey: {
-    type: String,
-    minlength: 3,
-    required: true
-  },
-  privateKey: {
-    type: String,
     minlength: 3,
     required: true
   },
